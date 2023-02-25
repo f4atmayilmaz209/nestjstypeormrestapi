@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:password@localhost:5432/myorder?schema=public"
+}
+
+model products{
+
+  product_id     Int @id @default(autoincrement())
+  title          String
+  category_id    Int
+  category_title String
+  author         String
+  list_price     Float
+  stock_quantity Int
+  siparisId      Int?  
+  siparis        siparis?   @relation(fields: [siparisId], references: [id])
+}
+model kampanya{
+
+  id            Int @id @default(autoincrement())
+  text          String
+  siparisId     Int?
+  siparis       siparis?   @relation(fields: [siparisId], references: [id])
+
+}
+model siparis{
+
+  id                    Int @id @default(autoincrement())
+  siparis_title         String
+  siparistoplamfiyat    Float
+  urun_id               Int
+  userId                Int?     @default(1)
+  users                 users?   @relation(fields: [userId], references: [id])
+  products              products[]  
+  kampanyas             kampanya[] 
+}
+
+
+model users{
+
+  id           Int @id @default(autoincrement())
+  username     String
+  lastname     String
+  address      String
+  sipariss     siparis[]
+
+
+}
